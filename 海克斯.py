@@ -82,15 +82,16 @@ with c1:
         hextech_choice("A")
 
 with c2:
-    draw_score_card("隊伍 B 分數", st.session_state.score_b, delta=f"目前每球 +{st.session_state.point_val_b} 分")
+    # 這裡換成了 st.metric，這樣 delta 綠色小字才會正常顯示
+    st.metric("隊伍 B 分數", st.session_state.score_b, delta=f"目前每球 +{st.session_state.point_val_b} 分")
     
     btn_col3, btn_col4 = st.columns(2)
-    with btn_col3:S
+    with btn_col3:
         if st.button("➕ B 隊得分", use_container_width=True):
             # 不再是 +1，而是加上目前的 point_val_b
-            #st.session_state.score_b += st.session_state.point_val_b
-            st.session_state.score_b += 1
+            st.session_state.score_b += st.session_state.point_val_b
             st.rerun()
+            
     with btn_col4:
         if st.button("➖ B隊扣分", use_container_width=True, key="minus_b"):
             st.session_state.score_b -= 1
@@ -98,7 +99,7 @@ with c2:
             
     st.divider()
     if st.button("✨ 隊伍 B 觸發海克斯", use_container_width=True):
-        # 【關鍵修改】只有按下的瞬間才抽卡，並存入保險箱
+        # 只有按下的瞬間才抽卡，並存入保險箱
         available_keys = list(HEXTECH_COLLECTION.keys())
         st.session_state.current_hextechs = random.sample(available_keys, k=min(3, len(available_keys)))
         hextech_choice("B")
